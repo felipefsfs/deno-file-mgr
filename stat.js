@@ -5,6 +5,12 @@ export {
   stat,
 };
 
+/**
+ * Calculate the new buffer & offset for SeekModeStart
+ * @param {number} buffer 
+ * @param {number} offset 
+ * @param {number} size 
+ */
 function calc_buffer_start(buffer = 0, offset = 0, size = 0) {
   if (size === 0) {
     return { buffer: 0, offset: 0 };
@@ -18,6 +24,12 @@ function calc_buffer_start(buffer = 0, offset = 0, size = 0) {
   };
 }
 
+/**
+ * Calculate the new buffer & offset for SeekModeEnd
+ * @param {number} buffer 
+ * @param {number} offset 
+ * @param {number} size 
+ */
 function calc_buffer_end(buffer = 0, offset = 0, size = 0) {
   if (size === 0) {
     return { buffer: 0, offset: 0 };
@@ -31,35 +43,23 @@ function calc_buffer_end(buffer = 0, offset = 0, size = 0) {
   };
 }
 
-function ocalc_buffer_end(buffer = 0, offset = 0, size = 0) {
-  if ((size === 0) || (offset > 0)) {
-    return {};
-  }
-  if (offset + size + buffer < 0) {
-    return {};
-  }
-  if (offset + size < 0) {
-    if (buffer + (offset + size) > size) {
-      return { buffer: size, offset: -size };
-    }
-    return { buffer: buffer + (offset + size), offset: -size };
-  }
-  if (offset + buffer > 0) {
-    return { buffer: -offset };
-  }
-  return { buffer };
-}
-
+/**
+ * Returns the size i bytes of the file
+ * @param {string} name 
+ */
 async function stat_size(name) {
   const s = await stat(name);
   return s.size || 0;
 }
 
+/**
+ * Returns the stat of the file
+ * @param {string} name 
+ */
 async function stat(name = "") {
   try {
     return await Deno.stat(name);
   } catch (_) {
-    //console.error(e);
     return {};
   }
 }

@@ -18,6 +18,10 @@ const nothing_func = (lines = [""], buffer = 0, offset = 0, size = 0) => ({
   size,
 });
 
+/**
+ * Creates a reader object that can read lines from the file with ease
+ * @param {object} specs - reader options
+ */
 function create_reader({
   decoder = new TextDecoder(""),
   line_function = nothing_func,
@@ -27,10 +31,17 @@ function create_reader({
 }) {
   return { read_lines, read_parsed_data, close };
 
+  /**
+   * Close the Opened file saved internally
+   */
   function close() {
     file.close();
   }
 
+  /**
+   * Read the text from the file and parse using the line_function
+   * @param {object} specs - read options 
+   */
   async function read_parsed_data({
     buffer = KB,
     offset = 0,
@@ -136,6 +147,10 @@ function create_reader({
     });
   }
 
+  /**
+   * Read the text from file at the position defined and return an array of lines (string)
+   * @param {object} specs - buffer; Seek offset; SeekMode 
+   */
   async function read_lines({
     buffersize = 0,
     offset = -0,

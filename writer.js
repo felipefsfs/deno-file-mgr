@@ -2,6 +2,10 @@ export {
   write_text,
 };
 
+/**
+ * Write text to file and returns the total number of bytes written
+ * @param {object} specs - write options 
+ */
 async function write_text({
   encoder = new TextEncoder(),
   file = new Deno.File(0),
