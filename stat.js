@@ -1,44 +1,53 @@
-function chunk_size_rev(buffer = 0, offset = 0, size = 0) {
-  if (buffer - offset > size) {
-    return [((buffer > size) && size) || buffer, -size];
-  }
-  return [buffer, offset - buffer];
-}
-
-function chunk_size(buffer = 0, offset = 0, size = 0) {
-  if (buffer + offset > size) {
-    return [size - offset, offset];
-  }
-  return [buffer, offset];
-}
+export {
+  calc_buffer_start,
+  calc_buffer_end,
+  stat_size,
+  stat,
+};
 
 function calc_buffer_start(buffer = 0, offset = 0, size = 0) {
-  if ((size === 0) || (offset < 0)) {
-    return 0;
+  if (size === 0) {
+    return { buffer: 0, offset: 0 };
   }
-    if (offset > size) {
-      return 0;
-    }
-    if (buffer + offset > size) {
-      return size - offset;
-    }
-    return buffer
+  const turn = (buffer + offset > size)
+    ? Math.max(0, size - offset)
+    : Math.max(0, buffer + offset);
+  return {
+    buffer: Math.min(buffer, size, turn),
+    offset: Math.min(size, Math.max(0, offset)),
+  };
 }
 
 function calc_buffer_end(buffer = 0, offset = 0, size = 0) {
-  if ((size === 0)||(offset > 0)) {
-    return 0
+  if (size === 0) {
+    return { buffer: 0, offset: 0 };
   }
-  if (offset + size +buffer < 0 ) {
-    return 0;
+  const turn = ((buffer + offset < 0) || (size + offset < 0))
+    ? Math.max(0, buffer + offset + size)
+    : Math.max(0, -offset);
+  return {
+    buffer: Math.min(buffer, size, turn),
+    offset: Math.min(0, Math.max(-size, offset)),
+  };
+}
+
+function ocalc_buffer_end(buffer = 0, offset = 0, size = 0) {
+  if ((size === 0) || (offset > 0)) {
+    return {};
   }
-  if (offset + size < 0 ) {
-    return buffer + (offset + size);
+  if (offset + size + buffer < 0) {
+    return {};
+  }
+  if (offset + size < 0) {
+    if (buffer + (offset + size) > size) {
+      return { buffer: size, offset: -size };
+    }
+    return { buffer: buffer + (offset + size), offset: -size };
   }
   if (offset + buffer > 0) {
-    return -offset;
+    return { buffer: -offset };
   }
-  return buffer;
+  return { buffer };
 }
 
 async function stat_size(name) {
@@ -49,8 +58,8 @@ async function stat_size(name) {
 async function stat(name = "") {
   try {
     return await Deno.stat(name);
-  } catch (e) {
-    console.error(e);
+  } catch (_) {
+    //console.error(e);
     return {};
   }
 }

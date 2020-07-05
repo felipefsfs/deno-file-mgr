@@ -3,7 +3,7 @@ run: fmt
 	deno run -A mod.js
 
 test: fmt
-	deno test
+	deno test --allow-read --allow-write
 
 fmt:
 	deno fmt -q

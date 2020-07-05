@@ -1,0 +1,7 @@
+Log 01
+Log: 102124124, user: lerolero, GET
+Log: 120241403, user: lerolero, GET
+Log: 123124124, user: anotheruser, POST
+Log: 124241403, user: anotheruser, DELETE
+Log: 152124124, user: lerolero, GET
+Log: 177241403, user: anotheruser, GET
